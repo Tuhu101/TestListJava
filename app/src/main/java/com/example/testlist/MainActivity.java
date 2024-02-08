@@ -52,7 +52,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 addTask();
             }
+
         });
+
+        for (Task task : taskList) {
+            Log.d("TaskDebug", "Task: " + task.getName() + ", Description: " + task.getDescription());
+        }
 
         taskListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -75,14 +80,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void addTask() {
         EditText taskEditText = findViewById(R.id.taskEditText);
+        EditText descriptionEditText = findViewById(R.id.descriptionEditText);
+
         String taskName = taskEditText.getText().toString().trim();
+        String description = descriptionEditText.getText().toString().trim();
+
+        Log.d("TaskDebug", "TaskName: " + taskName + ", Description: " + description);
 
         if (!taskName.isEmpty()) {
-            Task newTask = new Task(taskName);
+            Task newTask = new Task(taskName, description);
             taskList.add(newTask);
             taskAdapter.notifyDataSetChanged(); // Notify adapter of data change
             saveTasks();
             taskEditText.getText().clear();
+            descriptionEditText.getText().clear();
         }
     }
 

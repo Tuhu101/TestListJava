@@ -21,6 +21,15 @@
         android:layout_centerVertical="true"
         android:textSize="16sp"/>
 
-    <!-- Add any additional views as needed -->
+    <TextView
+        android:id="@+id/descriptionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="30dp"
+        android:layout_toEndOf="@+id/taskTextView"
+
+        android:textSize="16sp"/>
 
 </RelativeLayout>
+
