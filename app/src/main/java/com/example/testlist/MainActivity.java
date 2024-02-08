@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,13 +21,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+
 // TODO Liste                                   "Done"
 // TODO Oprette nye og slette og redigere       "Done"
 // TODO Gemmes på enheden                       "Done"
 // TODO Checkbox (Done)                         "Done"
 // TODO Tid oprettet
 // TODO Tid planlagt
-// TODO Type
+// TODO Type                                    "Done"
 // TODO Beskrivelse                             "Done"
 // TODO Icon
 // TODO Notification
@@ -40,9 +40,10 @@ import java.util.List;
 
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TaskAdapter.EditTaskListener {
 
     private List<Task> taskList;
+    private ListView taskListView;
     private TaskAdapter taskAdapter;
     private SharedPreferences sharedPreferences;
 
@@ -52,12 +53,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         taskList = new ArrayList<>();
-        taskAdapter = new TaskAdapter(this, taskList);
-
-        ListView taskListView = findViewById(R.id.taskListView);
-        taskListView.setAdapter(taskAdapter);
+        taskListView = findViewById(R.id.taskListView);
 
         taskAdapter = new TaskAdapter(this, taskList);
+        taskAdapter.setEditTaskListener(this);
+
         taskListView.setAdapter(taskAdapter);
 
         sharedPreferences = getPreferences(Context.MODE_PRIVATE);
@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 addTask();
             }
-
         });
 
         for (Task task : taskList) {
@@ -96,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
     private void addTask() {
         EditText taskEditText = findViewById(R.id.taskEditText);
         EditText descriptionEditText = findViewById(R.id.descriptionEditText);
@@ -118,36 +119,65 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onEditTask(int position) {
+        editTask(position);
+    }
+
+
     public void editTask(final int position) {
+        // Get the task at the specified position
+        Task taskToEdit = taskList.get(position);
+
+        // Create an AlertDialog with a custom layout
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Edit Task");
 
-        // Create an EditText to allow the user to enter the new task name
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
+        // Inflate a custom layout for the dialog
+        View view = getLayoutInflater().inflate(R.layout.edit_task_dialog, null);
+        builder.setView(view);
 
+        // Get references to EditTexts in the custom layout
+        EditText nameEditText = view.findViewById(R.id.editNameEditText);
+        EditText descriptionEditText = view.findViewById(R.id.editDescriptionEditText);
+        EditText categoryEditText = view.findViewById(R.id.editCategoryEditText);
+
+        // Set the current values of the task in the EditTexts
+        nameEditText.setText(taskToEdit.getName());
+        descriptionEditText.setText(taskToEdit.getDescription());
+        categoryEditText.setText(taskToEdit.getCategory());
+
+        // Set up the positive button click listener
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String newTaskName = input.getText().toString().trim();
+                // Retrieve the new values from the EditTexts
+                String newName = nameEditText.getText().toString().trim();
+                String newDescription = descriptionEditText.getText().toString().trim();
+                String newCategory = categoryEditText.getText().toString().trim();
 
-                if (!newTaskName.isEmpty()) {
-                    // Update the task in the list
-                    taskList.get(position).setName(newTaskName);
-                    taskAdapter.notifyDataSetChanged(); // Notify adapter of data change
-                    saveTasks();
-                }
+                // Update the task in the list
+                taskToEdit.setName(newName);
+                taskToEdit.setDescription(newDescription);
+                taskToEdit.setCategory(newCategory);
+
+                // Notify adapter of data change
+                taskAdapter.notifyDataSetChanged();
+
+                // Save the updated tasks
+                saveTasks();
             }
         });
 
+        // Set up the negative button click listener (optional)
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+                // Do nothing or handle cancellation if needed
             }
         });
 
+        // Show the dialog
         builder.show();
     }
 

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -15,8 +16,17 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 public class TaskAdapter extends ArrayAdapter<Task> {
+    private EditTaskListener editTaskListener;
     public TaskAdapter(Context context, List<Task> tasks) {
         super(context, 0, tasks);
+    }
+
+    public interface EditTaskListener {
+        void onEditTask(int position);
+    }
+
+    public void setEditTaskListener(EditTaskListener listener) {
+        this.editTaskListener = listener;
     }
 
     @NonNull
@@ -28,9 +38,10 @@ public class TaskAdapter extends ArrayAdapter<Task> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.task_item, parent, false);
         }
 
+        TextView categoryTextView = convertView.findViewById(R.id.categoryTextView);
         TextView taskTextView = convertView.findViewById(R.id.taskTextView);
         TextView descriptionTextView = convertView.findViewById(R.id.descriptionTextView);
-        TextView categoryTextView = convertView.findViewById(R.id.categoryTextView);
+        Button editButton = convertView.findViewById(R.id.editButton);
         CheckBox taskCheckBox = convertView.findViewById(R.id.taskCheckBox);
 
         taskTextView.setText(task.getName());
@@ -56,6 +67,19 @@ public class TaskAdapter extends ArrayAdapter<Task> {
             }
         });
 
+        // Set listeners for checkbox and edit button
+        taskCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            task.setCompleted(isChecked);
+            notifyDataSetChanged();
+        });
+
+        editButton.setOnClickListener(v -> {
+            // Handle edit button click
+            if (editTaskListener != null) {
+                editTaskListener.onEditTask(position);
+            }
+        });
+
         // Set a listener for the checkbox
         taskCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -68,3 +92,4 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         return convertView;
     }
 }
+
