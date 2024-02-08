@@ -8,12 +8,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class TaskAdapter extends ArrayAdapter<Task> {
     private EditTaskListener editTaskListener;
@@ -43,11 +46,27 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         TextView descriptionTextView = convertView.findViewById(R.id.descriptionTextView);
         Button editButton = convertView.findViewById(R.id.editButton);
         CheckBox taskCheckBox = convertView.findViewById(R.id.taskCheckBox);
+        ImageView iconImageView = convertView.findViewById(R.id.iconImageView);
+
+        // Display the creation timestamp in a TextView
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        if (task.getCreatedAt() != null) {
+            String formattedDate = dateFormat.format(task.getCreatedAt());
+            // Set formattedDate to your TextView or wherever you're using it
+            // For example, assuming you have a TextView with id "createdAtTextView":
+            TextView createdAtTextView = convertView.findViewById(R.id.createdAtTextView);
+            createdAtTextView.setText("Created at: " + formattedDate);
+        } else {
+            // Handle the case where createdAt is null
+        }
 
         taskTextView.setText(task.getName());
         descriptionTextView.setText(task.getDescription()); // Set description
         categoryTextView.setText(task.getCategory()); // Set category
         taskCheckBox.setChecked(task.isCompleted());
+        // Set the icon resource for the task
+        iconImageView.setImageResource(task.getIconResourceId());
 
         // Set a listener for the entire item layout
         convertView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -88,8 +107,8 @@ public class TaskAdapter extends ArrayAdapter<Task> {
                 notifyDataSetChanged();
             }
         });
-
         return convertView;
     }
 }
+
 

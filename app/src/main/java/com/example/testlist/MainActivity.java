@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -30,15 +31,11 @@ import java.util.List;
 // TODO Tid planlagt
 // TODO Type                                    "Done"
 // TODO Beskrivelse                             "Done"
-// TODO Icon
+// TODO Icon                                    "Done"
 // TODO Notification
 // TODO Alarm med lyd
 // TODO Repeatable?
 // TODO Responsive Design
-// TODO
-// TODO
-
-
 
 public class MainActivity extends AppCompatActivity implements TaskAdapter.EditTaskListener {
 
@@ -109,7 +106,8 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.EditT
         Log.d("TaskDebug", "TaskName: " + taskName + ", Description: " + description + ", Category: " + category);
 
         if (!taskName.isEmpty()) {
-            Task newTask = new Task(taskName, description, category);
+            Task newTask = new Task(taskName, description, category, R.drawable.task_icon);
+            newTask.setCreatedAt(new Date());
             taskList.add(newTask);
             taskAdapter.notifyDataSetChanged(); // Notify adapter of data change
             saveTasks();
