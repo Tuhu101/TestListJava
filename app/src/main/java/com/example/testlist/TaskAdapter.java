@@ -30,10 +30,12 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 
         TextView taskTextView = convertView.findViewById(R.id.taskTextView);
         TextView descriptionTextView = convertView.findViewById(R.id.descriptionTextView);
+        TextView categoryTextView = convertView.findViewById(R.id.categoryTextView);
         CheckBox taskCheckBox = convertView.findViewById(R.id.taskCheckBox);
 
         taskTextView.setText(task.getName());
         descriptionTextView.setText(task.getDescription()); // Set description
+        categoryTextView.setText(task.getCategory()); // Set category
         taskCheckBox.setChecked(task.isCompleted());
 
         // Set a listener for the entire item layout

@@ -22,6 +22,24 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO Liste                                   "Done"
+// TODO Oprette nye og slette og redigere       "Done"
+// TODO Gemmes på enheden                       "Done"
+// TODO Checkbox (Done)                         "Done"
+// TODO Tid oprettet
+// TODO Tid planlagt
+// TODO Type
+// TODO Beskrivelse                             "Done"
+// TODO Icon
+// TODO Notification
+// TODO Alarm med lyd
+// TODO Repeatable?
+// TODO Responsive Design
+// TODO
+// TODO
+
+
+
 public class MainActivity extends AppCompatActivity {
 
     private List<Task> taskList;
@@ -81,19 +99,22 @@ public class MainActivity extends AppCompatActivity {
     private void addTask() {
         EditText taskEditText = findViewById(R.id.taskEditText);
         EditText descriptionEditText = findViewById(R.id.descriptionEditText);
+        EditText categoryEditText = findViewById(R.id.categoryEditText);
 
         String taskName = taskEditText.getText().toString().trim();
         String description = descriptionEditText.getText().toString().trim();
+        String category = categoryEditText.getText().toString().trim();
 
-        Log.d("TaskDebug", "TaskName: " + taskName + ", Description: " + description);
+        Log.d("TaskDebug", "TaskName: " + taskName + ", Description: " + description + ", Category: " + category);
 
         if (!taskName.isEmpty()) {
-            Task newTask = new Task(taskName, description);
+            Task newTask = new Task(taskName, description, category);
             taskList.add(newTask);
             taskAdapter.notifyDataSetChanged(); // Notify adapter of data change
             saveTasks();
             taskEditText.getText().clear();
             descriptionEditText.getText().clear();
+            categoryEditText.getText().clear();
         }
     }
 

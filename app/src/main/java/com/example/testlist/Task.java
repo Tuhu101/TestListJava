@@ -2,12 +2,15 @@ package com.example.testlist;
 
 public class Task {
     private String name;
-    private boolean completed;
     private String description;
+    private String category;
+    private boolean completed;
 
-    public Task(String name, String description) {
+
+    public Task(String name, String description, String category) {
         this.name = name;
         this.description = description;
+        this.category = category;
         this.completed = false; // Default to not completed
     }
 
@@ -22,6 +25,10 @@ public class Task {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     public boolean isCompleted() {
